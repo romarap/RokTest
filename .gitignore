@@ -1,0 +1,13 @@
+/bin
+.project
+.classpath
+**/.buildpath
+**/.settings
+node_modules/*
+**/*.zip
+.idea
+.DS_Store
+*.sln
+app/src/package.json
+app/src/gulpfile.js
+app/src/.vs.1/config/applicationhost.config

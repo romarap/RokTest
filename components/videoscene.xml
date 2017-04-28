@@ -1,0 +1,54 @@
+<?xml version = "1.0" encoding = "utf-8" ?> 
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "VideoExample" extends = "Scene" >
+
+  <script type = "text/brightscript" >
+
+    <![CDATA[
+
+    sub init()
+      videocontent = createObject("RoSGNode", "ContentNode")
+
+      videocontent.title = "Example Video"
+     '' videocontent.streamformat = "mp4"
+      'videocontent.url = "http://roku.cpl.delvenetworks.com/media/59021fabe3b645968e382ac726cd6c7b/f8de8daf2ba34aeb90edc55b2d380c3f/b228eeaba0f248c48e01e158f99cd96e/rr_123_segment_1_072715.mp4"
+    m.player = m.top.findNode("exampleVideo")
+    m.player.observeField("state", "onPlayerStateChanged")
+    m.player.observeField("position", "onPositionChanged")
+
+    videoContent.playstart = 0
+    videoContent.title = "Example Video"
+    'videoContent.videoDisableUI = false
+    videoContent.encodingType =  "PlayReadyLicenseAcquisitionUrl"
+    videoContent.encodingKey = "https://ais.channel4.com/licence/4058897?client=roku&token=Ss7InlX-cx5wd6gdQgk9wPW0L9-q1zELn9vVhb_wsJxUqPutJw6iknZHedEv652PCC0btaU5rRTVgnE0796mdQ"
+    videoContent.url = "http://cf.p06.c4assets.com/xbox/CH4_29_02_29_64406001001003_002.ism/Manifest"
+    videoContent.streamformat = "ism"
+
+      
+      m.player.content = videocontent
+
+      m.player.setFocus(true)
+      m.player.control = "play"
+    end sub
+
+    function onPlayerStateChanged()
+      if m.player.state = "error" then
+        print "error: " + m.player.errorMsg
+        print "error: " + m.player.errorCode.toStr()
+      end if
+    end function
+
+    ]]>
+
+  </script>
+
+  <children >
+
+    <Video id = "exampleVideo"/>
+    
+
+  </children>
+
+</component>

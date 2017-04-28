@@ -1,0 +1,12 @@
+<component name="videoDataService" extends="baseDataService" >
+
+	<interface>
+        <field id="assetUrl" type="string"/>
+        <field id="freewheel" type="assocArray"/>
+	</interface>
+
+	<script type="text/brightscript" uri="pkg:/components/templates/Content/videoDataService.brs"/>
+    
+    <!-- Model processing -->
+    <script type="text/brightscript" uri="pkg:/source/models/videoModel.brs" />
+</component>

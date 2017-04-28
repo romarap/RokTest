@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="chapterMarker" extends="Poster">
+
+    <script type="text/brightscript" >
+        <![CDATA[
+            function init()
+                m.top.uri="pkg:/images/progressBar/chapter_point.png"
+                m.top.height=8
+                m.top.width=12
+                m.top.opacity=0.5
+            end function
+        ]]>
+    </script>
+
+    <children>
+    </children>
+
+</component>

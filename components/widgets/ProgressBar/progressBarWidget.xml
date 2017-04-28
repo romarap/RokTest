@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="progressBarWidget" extends="Group" >
+    <interface>
+        <!-- Signal to Player that it needs to pause -->
+        <field id="event" type="assocArray" alwaysNotify= "true"/>
+
+        <!-- Video & Ad Information -->
+        <field id="position" type="float" onChange="onPositionChanged" value="0.0"/>
+        <field id="duration" type="float" onChange="onDurationChanged" value="0.0"/>
+        <field id="adPods" type="assocArray" alwaysNotify= "true" onChange="onReceivedAdPods"/>
+
+        <!-- Seek -->
+        <field id="seekSelected" type="integer" alwaysNotify="true" onChange="onSeek" value="0"/>
+        <field id="seekSpeed" type="float" onChange="onSeekSpeedChanged" value="0.0"/>
+
+        <!-- Step -->
+        <field id="stepSpeed" type="float" value="0.0"/>
+
+        <!-- Progress Bar Images -->
+        <field id="playheadUri" type="uri" value="pkg:/images/progressBar/icon_playhead.png"/>
+        <field id="focusedPlayheadUri" type="uri" value="pkg:/images/progressBar/icon_playhead_focus.png"/>
+        <field id="skipFFUri" type="uri" value="pkg:/images/progressBar/icon_playhead_FF.png"/>
+        <field id="focusedSkipFFUri" type="uri" value="pkg:/images/progressBar/icon_playhead_FF.png"/>
+        <field id="skipRWUri" type="uri" value="pkg:/images/progressBar/icon_playhead_RW.png"/>
+        <field id="focusedSkipRWUri" type="uri" value="pkg:/images/progressBar/icon_playhead_RW.png"/>
+
+        <!-- Progress Bar Styling -->
+        <field id="playBarLength" type="integer" value="716"/>
+        <field id="scrubberImageWidth" type="integer" value="50"/>
+        <field id="focusedColor" type="color" onChange="onFocusedColorChanged" value="0xFFFFFFFF"/>
+        <field id="playHeadTimeLocation" type="vector2d" alias="playHeadTime.translation" value="[726,12]" />
+    </interface>
+
+    <!-- Scripts -->
+    <script type="text/brightscript" uri="pkg:/components/widgets/ProgressBar/progressBarWidget.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/constants.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/playerConstants.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/log.brs" />
+    <script type="text/brightscript" uri="pkg:/source/config.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/timer.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/date.brs" />
+
+    <children>
+        <!-- Displays timecode   -->
+        <Label id="playHeadTime" text="" >
+            <Font role="font" uri="pkg:/fonts/C4Headline.otf" size="18"/>
+        </Label>
+        <Group
+          id="playBar"
+          translation="[0,15]" >
+            <!-- Progress Bar split into two sections -  amount "remaining" to play & "progress" through video   -->
+            <Rectangle
+              id="remaining"
+              color="#383F47"
+              width="0"
+              height="12" />
+
+            <Rectangle
+              id="progress"
+              color="#ECECEC"
+              width="0"
+              height="12"
+              translation="[0,0]" />
+
+            <!-- Contains the ad markers   -->
+            <Group id="markers" translation="[0,2]" />
+        </Group>
+        <Group
+          id="playHead"
+          translation="[0,0]" >
+            <!-- Highlight when progres bar has focus   -->
+            <Rectangle
+              id="playHeadFocus"
+              color="#ECECEC"
+              width="44"
+              height="44"
+              translation="[3,0]"
+              visible="false"/>
+
+            <!-- Play head image   -->
+            <Poster
+              id="playHeadImage"
+              uri=""
+              height="44"
+              width="44"
+              opacity="1.0"
+              translation="[3,0]" />
+        </Group>
+    </children>
+</component>
