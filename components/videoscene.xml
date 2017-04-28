@@ -3,36 +3,13 @@
 <!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
 
 <component name = "VideoExample" extends = "Scene" >
-
   <script type = "text/brightscript" >
 
     <![CDATA[
 
     sub init()
-      videocontent = createObject("RoSGNode", "ContentNode")
-
-      m.player = m.top.findNode("exampleVideo")
-      m.playerBarOverlay = m.top.findNode("playerBarOverlay")
-      m.progressBar = m.top.findNode("progressBar")
-      m.player.observeField("state", "onPlayerStateChanged")
-      m.player.observeField("position", "onPositionChanged")
-
-      videocontent.title = "Example Video"
-      videocontent.streamformat = "mp4"
-      videocontent.url = "http://roku.cpl.delvenetworks.com/media/59021fabe3b645968e382ac726cd6c7b/f8de8daf2ba34aeb90edc55b2d380c3f/b228eeaba0f248c48e01e158f99cd96e/rr_123_segment_1_072715.mp4"
-    
-      videoContent.encodingType =  "PlayReadyLicenseAcquisitionUrl"
-      videoContent.encodingKey = "https://ais.channel4.com/licence/4058897?client=roku&token=orDtfMJCD9Qv3ZqpD2x6u_W0L9-q1zELn9vVhb_wsJxUqPutJw6iknZHedEv652PCC0btaU5rRTVgnE0796mdQ"
-      videoContent.url = "http://cf.p06.c4assets.com/xbox/CH4_29_02_29_64406001001003_002.ism/Manifest"
-      videoContent.streamformat = "ism"
-
-      videoContent.playstart = 0
-      videoContent.title = "Example Video"
-      'videoContent.videoDisableUI = false
-    
-      m.player.content = videocontent
-      m.player.setFocus(true)
-      m.player.control = "play"
+      m.assetUrl = "http://ais.channel4.com/asset/4058897?client=roku"
+      getLicenseUrl()
     end sub
 
 
@@ -40,8 +17,6 @@
       m.progressBar.duration = m.player.duration
       m.progressBar.position = m.player.position
     end function
-
-
 
     function onPlayerStateChanged()
       if m.player.state = "error" then
@@ -77,6 +52,54 @@
           m.playerBarOverlayTimer = m.top.findNode("playerBarOverlayTimer")
       end if
       m.playerBarOverlayTimer.control = "stop"
+    end sub
+
+    sub getLicenseUrl()
+      print ".......getLicenseUrl()......."
+
+      m.videoLicenseDataService = createObject("roSGNode", "videoDataService")
+      m.videoLicenseDataService.observeField("resultData", "licenseUrlFetched")
+      
+      print "............... assetUrl = ", m.assetUrl
+      m.videoLicenseDataService.functionName = "getAssetVideoStreamUrl"
+      m.videoLicenseDataService.assetUrl = m.assetUrl
+      m.videoLicenseDataService.control = "RUN"
+    end sub
+
+    sub licenseUrlFetched()
+        print ".......licenseUrlFetched()......."
+        resultData = m.videoLicenseDataService.resultData
+
+        'reset the thread as soon as we are done working with it.
+        m.videoLicenseDataService.control = "DONE"
+        m.videoLicenseDataService = invalid
+
+        print resultData
+
+         'throws back the error to playerwidget.
+        if resultData.isError = invalid then
+
+            m.player = m.top.findNode("exampleVideo")
+            m.playerBarOverlay = m.top.findNode("playerBarOverlay")
+            m.progressBar = m.top.findNode("progressBar")
+            m.player.observeField("state", "onPlayerStateChanged")
+            m.player.observeField("position", "onPositionChanged")
+
+            videocontent = createObject("RoSGNode", "ContentNode")
+
+            videoContent.title = "Example Video"
+            'videoContent.videoDisableUI = true
+            videoContent.encodingType =  "PlayReadyLicenseAcquisitionUrl"
+            
+            videoContent.encodingKey = resultData.licenseurl
+            videoContent.url = resultData.streamuri
+            videoContent.streamformat = "ism"
+
+            m.player.content = videocontent
+
+            m.player.setFocus(true)
+            m.player.control = "play"
+        end if
     end sub
     ]]>
 

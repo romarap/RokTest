@@ -1,10 +1,10 @@
 <component name="videoDataService" extends="task" >
-
 	<interface>
         <field id="assetUrl" type="string"/>
         <field id="freewheel" type="assocArray"/>
+        <field id="resultData" type="assocArray"/>
 	</interface>
 
 	<script type="text/brightscript" uri="pkg:/components/templates/Content/videoDataService.brs"/>
-    
+	<script type="text/brightscript" uri="pkg:/source/models/videoModel.brs" />
 </component>
