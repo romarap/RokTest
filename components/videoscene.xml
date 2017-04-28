@@ -11,27 +11,37 @@
     sub init()
       videocontent = createObject("RoSGNode", "ContentNode")
 
+      m.player = m.top.findNode("exampleVideo")
+      m.playerBarOverlay = m.top.findNode("playerBarOverlay")
+      m.progressBar = m.top.findNode("progressBar")
+      m.player.observeField("state", "onPlayerStateChanged")
+      m.player.observeField("position", "onPositionChanged")
+
       videocontent.title = "Example Video"
-     '' videocontent.streamformat = "mp4"
-      'videocontent.url = "http://roku.cpl.delvenetworks.com/media/59021fabe3b645968e382ac726cd6c7b/f8de8daf2ba34aeb90edc55b2d380c3f/b228eeaba0f248c48e01e158f99cd96e/rr_123_segment_1_072715.mp4"
-    m.player = m.top.findNode("exampleVideo")
-    m.player.observeField("state", "onPlayerStateChanged")
-    m.player.observeField("position", "onPositionChanged")
+      videocontent.streamformat = "mp4"
+      videocontent.url = "http://roku.cpl.delvenetworks.com/media/59021fabe3b645968e382ac726cd6c7b/f8de8daf2ba34aeb90edc55b2d380c3f/b228eeaba0f248c48e01e158f99cd96e/rr_123_segment_1_072715.mp4"
+    
+      videoContent.encodingType =  "PlayReadyLicenseAcquisitionUrl"
+      videoContent.encodingKey = "https://ais.channel4.com/licence/4058897?client=roku&token=orDtfMJCD9Qv3ZqpD2x6u_W0L9-q1zELn9vVhb_wsJxUqPutJw6iknZHedEv652PCC0btaU5rRTVgnE0796mdQ"
+      videoContent.url = "http://cf.p06.c4assets.com/xbox/CH4_29_02_29_64406001001003_002.ism/Manifest"
+      videoContent.streamformat = "ism"
 
-    videoContent.playstart = 0
-    videoContent.title = "Example Video"
-    'videoContent.videoDisableUI = false
-    videoContent.encodingType =  "PlayReadyLicenseAcquisitionUrl"
-    videoContent.encodingKey = "https://ais.channel4.com/licence/4058897?client=roku&token=Ss7InlX-cx5wd6gdQgk9wPW0L9-q1zELn9vVhb_wsJxUqPutJw6iknZHedEv652PCC0btaU5rRTVgnE0796mdQ"
-    videoContent.url = "http://cf.p06.c4assets.com/xbox/CH4_29_02_29_64406001001003_002.ism/Manifest"
-    videoContent.streamformat = "ism"
-
-      
+      videoContent.playstart = 0
+      videoContent.title = "Example Video"
+      'videoContent.videoDisableUI = false
+    
       m.player.content = videocontent
-
       m.player.setFocus(true)
       m.player.control = "play"
     end sub
+
+
+    function onPositionChanged()
+      m.progressBar.duration = m.player.duration
+      m.progressBar.position = m.player.position
+    end function
+
+
 
     function onPlayerStateChanged()
       if m.player.state = "error" then
@@ -40,6 +50,34 @@
       end if
     end function
 
+    function onKeyEvent(key as String, press as Boolean) as Boolean
+      showPlayerBarOverlay()
+    end function
+
+    sub showPlayerBarOverlay()
+      m.playerBarOverlay.visible = true
+      startPlayerBarOverlayTimer()
+    end sub
+
+    sub hidePlayerBarOverlay()
+      m.playerBarOverlay.visible = false
+    end sub
+
+    sub startPlayerBarOverlayTimer()
+      if m.playerBarOverlayTimer = invalid then
+          m.playerBarOverlayTimer = m.top.findNode("playerBarOverlayTimer")
+      end if
+      m.playerBarOverlayTimer.ObserveField("fire", "onPlayBarOverlayTimedOut")
+      m.playerBarOverlayTimer.control = "start"
+    end sub
+
+    sub onPlayBarOverlayTimedOut()
+      hidePlayerBarOverlay()
+      if m.playerBarOverlayTimer = invalid then
+          m.playerBarOverlayTimer = m.top.findNode("playerBarOverlayTimer")
+      end if
+      m.playerBarOverlayTimer.control = "stop"
+    end sub
     ]]>
 
   </script>
@@ -48,7 +86,14 @@
 
     <Video id = "exampleVideo"/>
     
+    <Rectangle id="playerBarOverlay" visible="false" width="1280" height="160" translation="[0, 560]" opacity="0.90" color="#1E2226">
+            
+                <!--<Poster id = "poster" visible="true" uri="pkg:/images/welcome.png"/>-->
+            <progressBarWidget id="progressBar" translation="[202,72]" />
+    </Rectangle>
 
+
+    <Timer id="playerBarOverlayTimer" repeat="true" duration="5"/>
   </children>
 
 </component>

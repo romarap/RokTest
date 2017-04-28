@@ -1,4 +1,4 @@
-<component name="videoDataService" extends="baseDataService" >
+<component name="videoDataService" extends="task" >
 
 	<interface>
         <field id="assetUrl" type="string"/>
@@ -7,6 +7,4 @@
 
 	<script type="text/brightscript" uri="pkg:/components/templates/Content/videoDataService.brs"/>
     
-    <!-- Model processing -->
-    <script type="text/brightscript" uri="pkg:/source/models/videoModel.brs" />
 </component>
